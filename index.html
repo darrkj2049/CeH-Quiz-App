@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CEH Exam Prep Quiz</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Home Screen -->
+    <div id="home-screen" class="screen active">
+        <div class="container">
+            <div class="home-header">
+                <h1>CEH Exam Preparation</h1>
+                <p>Certified Ethical Hacker (312-50v11) Practice Quiz</p>
+            </div>
+            
+            <div class="stats-section">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="total-questions">10</div>
+                        <div class="stat-label">Total Questions</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="session-score">0%</div>
+                        <div class="stat-label">Session Score</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="completed-count">0</div>
+                        <div class="stat-label">Completed</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="quiz-modes">
+                <h2>Select Quiz Mode</h2>
+                <div class="mode-grid">
+                    <div class="mode-card" data-mode="practice">
+                        <h3>Practice Mode</h3>
+                        <p>All questions, no time limit</p>
+                        <button class="btn btn--primary">Start Practice</button>
+                    </div>
+                    <div class="mode-card" data-mode="exam">
+                        <h3>Exam Mode</h3>
+                        <p>Timed simulation</p>
+                        <button class="btn btn--primary">Start Exam</button>
+                    </div>
+                    <div class="mode-card" data-mode="random">
+                        <h3>Random Mode</h3>
+                        <p>Randomized question order</p>
+                        <button class="btn btn--primary">Start Random</button>
+                    </div>
+                    <div class="mode-card" data-mode="review">
+                        <h3>Review Mode</h3>
+                        <p>Review incorrect answers</p>
+                        <button class="btn btn--secondary" id="review-btn" disabled>Start Review</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="quiz-settings">
+                <h3>Quiz Settings</h3>
+                <div class="settings-row">
+                    <label for="question-count">Number of Questions:</label>
+                    <select id="question-count" class="form-control">
+                        <option value="All Question">All Questions</option>
+                        <option value="10">10 Questions</option>
+                        <option value="20">20 Questions</option>
+                        <option value="50">50 Questions</option>
+                        <option value="100">100 Question</option>
+                        <option value="200">200 Questions</option>
+                    </select>
+                </div>
+                <div class="settings-row" id="timer-setting" style="display: none;">
+                    <label for="time-limit">Time Limit (minutes):</label>
+                    <select id="time-limit" class="form-control">
+                        <option value="30">30 minutes</option>
+                        <option value="20">20 minutes</option>
+                        <option value="10">10 minutes</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Quiz Screen -->
+    <div id="quiz-screen" class="screen">
+        <div class="quiz-header">
+            <div class="container">
+                <div class="quiz-nav">
+                    <div class="quiz-info">
+                        <span id="question-counter">Question 1 of 10</span>
+                        <div class="timer" id="timer" style="display: none;">
+                            <span id="time-remaining">30:00</span>
+                        </div>
+                    </div>
+                    <div class="quiz-actions">
+                        <button class="btn btn--outline" id="bookmark-btn">
+                            <span id="bookmark-icon">☆</span> Bookmark
+                        </button>
+                        <button class="btn btn--secondary" id="quit-quiz">Quit Quiz</button>
+                    </div>
+                </div>
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill"></div>
+                    </div>
+                    <span class="progress-text" id="progress-text">0%</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="container">
+            <div class="quiz-content">
+                <div class="question-section">
+                    <h2 id="question-text">Loading question...</h2>
+                    <div class="question-options" id="question-options">
+                        <!-- Options will be populated by JavaScript -->
+                    </div>
+                    <div class="feedback-section" id="feedback-section" style="display: none;">
+                        <div class="feedback-message" id="feedback-message"></div>
+                        <div class="explanation" id="explanation"></div>
+                    </div>
+                </div>
+                
+                <div class="quiz-navigation">
+                    <button class="btn btn--outline" id="prev-btn" disabled>Previous</button>
+                    <div class="nav-center">
+                        <button class="btn btn--secondary" id="show-navigator">Question Navigator</button>
+                    </div>
+                    <button class="btn btn--primary" id="next-btn">Next</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Results Screen -->
+    <div id="results-screen" class="screen">
+        <div class="container">
+            <div class="results-header">
+                <h1>Quiz Complete!</h1>
+                <div class="final-score">
+                    <div class="score-circle">
+                        <span id="final-percentage">0%</span>
+                    </div>
+                    <div class="score-details">
+                        <p><span id="correct-count">0</span> out of <span id="total-count">0</span> correct</p>
+                        <p class="score-status" id="score-status">Keep practicing!</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="results-breakdown">
+                <h2>Performance Analysis</h2>
+                <div class="breakdown-grid">
+                    <div class="breakdown-item">
+                        <div class="breakdown-label">Accuracy Rate</div>
+                        <div class="breakdown-value" id="accuracy-rate">0%</div>
+                    </div>
+                    <div class="breakdown-item">
+                        <div class="breakdown-label">Time Spent</div>
+                        <div class="breakdown-value" id="time-spent">0 min</div>
+                    </div>
+                    <div class="breakdown-item">
+                        <div class="breakdown-label">Correct Answers</div>
+                        <div class="breakdown-value" id="correct-answers">0</div>
+                    </div>
+                    <div class="breakdown-item">
+                        <div class="breakdown-label">Incorrect Answers</div>
+                        <div class="breakdown-value" id="incorrect-answers">0</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="results-actions">
+                <button class="btn btn--primary" id="review-incorrect">Review Incorrect Answers</button>
+                <button class="btn btn--outline" id="retake-quiz">Retake Quiz</button>
+                <button class="btn btn--secondary" id="home-btn">Back to Home</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Question Navigator Modal -->
+    <div id="navigator-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Question Navigator</h3>
+                <button class="modal-close" id="close-navigator">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="navigator-grid" id="navigator-grid">
+                    <!-- Question numbers will be populated by JavaScript -->
+                </div>
+                <div class="navigator-legend">
+                    <div class="legend-item">
+                        <span class="legend-color answered"></span>
+                        <span>Answered</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color current"></span>
+                        <span>Current</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color bookmarked"></span>
+                        <span>Bookmarked</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color unanswered"></span>
+                        <span>Unanswered</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script type="module" src="app.js"></script>
+</body>
+</html>
